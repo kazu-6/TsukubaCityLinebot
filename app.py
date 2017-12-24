@@ -52,7 +52,7 @@ else:
     GEOCODING_APIKEY = os.getenv('GEOCODING_APIKEY')
     print(CHANNEL_SECRET)
 
-db_name = 'mydb'
+db_name = 'tsukuba_city_line_bot' # change to the database name you are using
 client = None
 db = None
 

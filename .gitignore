@@ -1,5 +1,6 @@
 manifest.yml
 vcap-local.json
+ngrok.exe
 
 # Created by .ignore support plugin (hsz.mobi)
 ### Python template
