@@ -136,6 +136,9 @@ def shutdown():
         client.disconnect()
 
 
+# 「5-2. 住所変更ＦＡＱ」
+# 「P49 A 転出（国内・海外）」～「P56 D 転居」
+
 @app.route("/line/callback", methods=['POST'])
 def callback():
     signature = request.headers['X-Line-Signature']
