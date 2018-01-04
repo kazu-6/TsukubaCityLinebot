@@ -1,3 +1,25 @@
+# 案内マニュアル」フォルダ内にある、、、
+# todo「5-2. 住所変更ＦＡＱ」
+# todo 「P49 A 転出（国内・海外）」～「P56 D 転居」
+# todo 「通知カードの紛失に関連する手続」及び「通知カードの表面記載事項変更手続」
+
+#  ●もう怖くない！マイナ係窓口業務チェックポイント
+#
+# 　　　シート名 「通知カード再交付申請受付」P２
+# 　　　　　　　 「個人番号変更受付」P３
+#
+#
+# 　●マイナンバー取扱事務早見表
+#
+# 　　　シート名 「H28.7.1～」
+# 　　　　事務欄　個人番号・・・・指定請求申請
+# 　　　　　　　　通知カード・・・再交付申請，紛失届，表面記載事項変更届（外国人含）
+#
+#  ●(通カ・個カ・電子)マイナンバー事務早見表
+#
+# 　　　シート名 「通知カード」通知カードに関する事務早見表
+# 　　　　項番号 「１－１」～「２－３」，「６－１」～「６－３」
+
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
@@ -52,7 +74,7 @@ else:
     GEOCODING_APIKEY = os.getenv('GEOCODING_APIKEY')
     print(CHANNEL_SECRET)
 
-db_name = 'tsukuba_city_line_bot' # change to the database name you are using
+db_name = 'tsukuba_city_line_bot'  # change to the database name you are using
 client = None
 db = None
 
@@ -77,15 +99,13 @@ elif os.path.isfile('vcap-local.json'):
         client = Cloudant(user, password, url=url, connect=True)
         db = client.create_database(db_name, throw_on_exists=False)
 
-
 AREA_COUNT = {
-  '天久保': 4,
-  '桜': 3,
-  '春日': 4,
-  '吾妻': 4,
-  '竹園': 4,
+    '天久保': 4,
+    '桜': 3,
+    '春日': 4,
+    '吾妻': 4,
+    '竹園': 4,
 }
-
 
 if CHANNEL_SECRET is None:
     print('Specify LINE_CHANNEL_SECRET as environment variable.')
@@ -112,7 +132,7 @@ def home():
 # @app.route('/api/visitors', methods=['GET'])
 # def get_visitor():
 #     if client:
-#         return jsonify(list(map(lambda doc: doc['name'], db)))
+#         return jsonify(list(map(lambda doc: doc['na me'], db)))
 #     else:
 #         print('No database')
 #         return jsonify([])
@@ -136,8 +156,6 @@ def shutdown():
         client.disconnect()
 
 
-# 「5-2. 住所変更ＦＡＱ」
-# 「P49 A 転出（国内・海外）」～「P56 D 転居」
 
 @app.route("/line/callback", methods=['POST'])
 def callback():
@@ -176,13 +194,13 @@ def callback():
 
             # if isinstance(event.message, LocationMessage):
 
-                # latitude = event.message.latitude
-                # longtitude = event.message.longitude
+            # latitude = event.message.latitude
+            # longtitude = event.message.longitude
 
-                # line_bot_api.reply_message(
-                #     event.reply_token,
-                #     get_budget_buttons_template_message()
-                # )
+            # line_bot_api.reply_message(
+            #     event.reply_token,
+            #     get_budget_buttons_template_message()
+            # )
 
         if isinstance(event, PostbackEvent):
 
@@ -260,10 +278,9 @@ def callback():
 # Below are templates functions
 
 def get_area_buttons_template_message(area):
-
     chou_count = AREA_COUNT[area]
 
-    actions = [get_area_postback_template_action(area, i) for i in range(1, chou_count+1)]
+    actions = [get_area_postback_template_action(area, i) for i in range(1, chou_count + 1)]
 
     buttons_template_message = TemplateSendMessage(
         alt_text='{}の何丁目にいますか？'.format(area),
@@ -278,21 +295,19 @@ def get_area_buttons_template_message(area):
 
 
 def get_area_postback_template_action(area, i):
-
     data_dict = {
         'area': area + str(i),
         'next': 'budget'
     }
 
     return PostbackTemplateAction(
-                    label='{}丁目'.format(str(i)),
-                    text='今は{}の{}丁目'.format(area, str(i)),
-                    data=urlparse.urlencode(data_dict)
-            )
+        label='{}丁目'.format(str(i)),
+        text='今は{}の{}丁目'.format(area, str(i)),
+        data=urlparse.urlencode(data_dict)
+    )
 
 
 def get_budget_buttons_template_message(data_dict):
-
     actions = [get_budget_postback_template_action(data_dict, i, budget_range)
                for i, budget_range in enumerate(['多分、~1200未満', '2000円近く覚悟', '3000円かそれ以上'])]
 
@@ -309,20 +324,18 @@ def get_budget_buttons_template_message(data_dict):
 
 
 def get_budget_postback_template_action(data_dict, i, budget_range):
-
     data_dict['budget'] = i + 1
     data_dict['next'] = 'transportation'
     data = urlparse.urlencode(data_dict)
 
     return PostbackTemplateAction(
-               label=budget_range,
-               text="{}なところですね。".format(budget_range),
-               data=data
-           )
+        label=budget_range,
+        text="{}なところですね。".format(budget_range),
+        data=data
+    )
 
 
 def get_transportation_buttons_template_message(data_dict):
-
     actions = [get_transportation_postback_template_action(data_dict, transportation)
                for transportation in ['徒歩', '自転車', '車']]
 
@@ -339,21 +352,19 @@ def get_transportation_buttons_template_message(data_dict):
 
 
 def get_transportation_postback_template_action(data_dict, transportation):
-
     data_dict['next'] = 'show-result'
     data_dict['transportation'] = transportation
     data_dict['nth-result'] = 0
     data = urlparse.urlencode(data_dict)
 
     return PostbackTemplateAction(
-               label=transportation,
-               text='{}で行ける範囲で。\n指定された条件で、今現在営業中の店をお探しします。\n検索にちょっとだけ時間を頂きます。'.format(transportation),
-               data=data
-           )
+        label=transportation,
+        text='{}で行ける範囲で。\n指定された条件で、今現在営業中の店をお探しします。\n検索にちょっとだけ時間を頂きます。'.format(transportation),
+        data=data
+    )
 
 
 def get_spot_carousels(places5):
-
     columns = [get_carousel_column_template(place) for place in places5]
     # template.py のCarouselTemplate(Base)をCarouselTemplate(Template)に変えたほうがいいような
     carousel_template_message = TemplateSendMessage(
@@ -365,7 +376,6 @@ def get_spot_carousels(places5):
 
 
 def get_carousel_column_template(place):
-
     # area = re.sub('日本、[\s\S]?(〒\d{3}-\d{4}[\s\S]?)?茨城県つくば市', '', place['formatted_address'])
     area = re.sub('つくば市', '', place['vicinity'])
 
@@ -395,26 +405,25 @@ def get_carousel_column_template(place):
     )
 
     carousel_column = CarouselColumn(
-                    thumbnail_image_url=photo_url,
-                    title=place['name'],
-                    text=address,
-                    actions=[
-                        URITemplateAction(
-                            label='地図とレビューを見る',
-                            uri=gmap_url
-                        ),
-                        PostbackTemplateAction(
-                            label='電話番号を表示する',
-                            data='action=detail_phone&id={}'.format(place['place_id'])
-                        )
-                    ]
+        thumbnail_image_url=photo_url,
+        title=place['name'],
+        text=address,
+        actions=[
+            URITemplateAction(
+                label='地図とレビューを見る',
+                uri=gmap_url
+            ),
+            PostbackTemplateAction(
+                label='電話番号を表示する',
+                data='action=detail_phone&id={}'.format(place['place_id'])
+            )
+        ]
     )
 
     return carousel_column
 
 
 def get_additional_search_confirm_template(data_dict):
-
     data_dict['nth-result'] = int(data_dict['nth-result']) + 1
 
     confirm_template_message = TemplateSendMessage(
@@ -446,7 +455,6 @@ def get_additional_search_confirm_template(data_dict):
 
 
 def get_geocode(address):
-
     params = {
         'address': 'つくば市 ' + address,
         'key': GEOCODING_APIKEY
@@ -462,7 +470,6 @@ def get_geocode(address):
 
 
 def get_places_by_nearby_search(budget, transportation, location_geometry):
-
     radius = ''
     print(transportation)
     if transportation == '徒歩':
@@ -478,7 +485,7 @@ def get_places_by_nearby_search(budget, transportation, location_geometry):
         'location': location_geometry,
         'radius': radius,
         'maxprice': budget,
-        'minprice': str(int(budget)-1),
+        'minprice': str(int(budget) - 1),
         'opennow': 'true',
         'rankby': 'prominence',
         'language': 'ja'
@@ -497,7 +504,6 @@ def get_places_by_nearby_search(budget, transportation, location_geometry):
 
 
 def get_place_detail(place_id):
-
     params = {
         'key': PLACES_APIKEY,
         'placeid': place_id,
@@ -512,7 +518,6 @@ def get_place_detail(place_id):
 
 
 def get_place_photo_url(photo_ref):
-
     params = {
         'key': PLACES_APIKEY,
         'photoreference': photo_ref,
@@ -524,7 +529,6 @@ def get_place_photo_url(photo_ref):
 
 
 def post_text_to_db(event):
-
     data_to_send = {
         "text": event.message.text,
         "text_id": event.message.id,
@@ -543,7 +547,6 @@ def post_text_to_db(event):
 
 
 def post_postback_to_db(event):
-
     data_to_send = {
         "postback_data": event.postback.data,
         "user_id": event.source.user_id,
@@ -571,7 +574,6 @@ def get_postback_data_dict(data):
 
 #####################################
 if __name__ == "__main__":
-
     # arg_parser = ArgumentParser(
     #     usage='Usage: python ' + __file__ + ' [--port <port>] [--help]'
     # )
