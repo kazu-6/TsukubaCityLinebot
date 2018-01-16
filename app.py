@@ -66,6 +66,7 @@ if os.path.isfile('.env'):
     PLACES_APIKEY = os.environ.get('PLACES_APIKEY')
     GEOCODING_APIKEY = os.environ.get('GEOCODING_APIKEY')
 
+# envの記述方法を書いておくべきかな
 else:
     print('Cannot find .env. So it should be on the cloud.')
     CHANNEL_SECRET = os.getenv('CHANNEL_SECRET')
