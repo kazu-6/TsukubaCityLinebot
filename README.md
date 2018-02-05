@@ -38,6 +38,8 @@ Anaconda python3
 - https://developers.google.com/maps/documentation/geocoding/get-api-key?hl=ja
 - ibm cloud -> select your App -> Connections -> Cloudant -> View Credentials
 
+### vcap-local.jsonの準備
+
 
 ## 実行方法
 
