@@ -55,6 +55,8 @@ webhook url を設定して、
 
 ## Bluemix へのPush
 
+あるいは最初からGithubからのCIを設定した方がいい。
+
 1. [cloudfoundry cli](https://github.com/cloudfoundry/cli#downloads "cloudfoundry/cli: The official command line client for Cloud Foundry")をインストール
 1. bluemix アカウントを作成
 1. [IBMが公開しているリポジトリ](https://github.com/IBM-Bluemix/get-started-python#3-prepare-the-app-for-deployment "IBM-Bluemix/get-started-python: A Python application and tutorial that use Flask framework to provide a REST API to receive requests from the UI. The API then persists the data to a Cloudant database.")のREADME.mdの3.以降を参照。
@@ -77,6 +79,6 @@ webhook url を設定して、
     - post, get, port, html, css
         - 少しでいい。
 - API, JSONの概念と、それを利用するスキル
-- Git, Github, Continuos Integration の概念
+- Git, Github, Continuous Integration の概念
 - Bluemix, PaaSの概念。マニュアル読みながら使う。
 - NoSQLの概念

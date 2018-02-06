@@ -115,7 +115,9 @@ if CHANNEL_ACCESS_TOKEN is None:
     print('Specify LINE_CHANNEL_ACCESS_TOKEN as environment variable.')
     sys.exit(1)
 
-line_bot_api = LineBotApi(CHANNEL_ACCESS_TOKEN)
+line_bot_api = LineBotApi(CHANNEL_ACCESS_TOKEN, "http://localhost:8080")
+# デプロイ時は
+# line_bot_api = LineBotApi(CHANNEL_ACCESS_TOKEN)
 parser = WebhookParser(CHANNEL_SECRET)
 
 app = Flask(__name__)
@@ -228,6 +230,7 @@ def callback():
 
             elif next == "show-result":
 
+                print("showing result")
                 places = get_places_by_nearby_search(
                     data_dict['budget'],
                     data_dict['transportation'],
