@@ -89,6 +89,8 @@ if 'VCAP_SERVICES' in os.environ:
         url = 'https://' + creds['host']
         client = Cloudant(user, password, url=url, connect=True)
         db = client.create_database(db_name, throw_on_exists=False)
+        line_bot_api = LineBotApi(CHANNEL_ACCESS_TOKEN)
+
 elif os.path.isfile('vcap-local.json'):
     with open('vcap-local.json') as f:
         vcap = json.load(f)
@@ -99,6 +101,7 @@ elif os.path.isfile('vcap-local.json'):
         url = 'https://' + creds['host']
         client = Cloudant(user, password, url=url, connect=True)
         db = client.create_database(db_name, throw_on_exists=False)
+        line_bot_api = LineBotApi(CHANNEL_ACCESS_TOKEN, "http://localhost:8080")#using line-simulator
 
 AREA_COUNT = {
     '天久保': 4,
@@ -115,9 +118,7 @@ if CHANNEL_ACCESS_TOKEN is None:
     print('Specify LINE_CHANNEL_ACCESS_TOKEN as environment variable.')
     sys.exit(1)
 
-line_bot_api = LineBotApi(CHANNEL_ACCESS_TOKEN, "http://localhost:8080")
-# デプロイ時は
-# line_bot_api = LineBotApi(CHANNEL_ACCESS_TOKEN)
+
 parser = WebhookParser(CHANNEL_SECRET)
 
 app = Flask(__name__)
