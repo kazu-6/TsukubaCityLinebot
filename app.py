@@ -398,15 +398,21 @@ def get_carousel_column_template(place):
     if len(area) > 17:
         line_change = ''
 
-    price = ''
-    if place['price_level'] is 1:
-        price = '~1200円'
-    if place['price_level'] is 2:
-        price = '1200円~'
-    if place['price_level'] is 3:
-        price = '3000円~'
+    address_template = ''
+    if 'price_level' in place.keys():
+        if place['price_level'] is 1:
+            price = '~1200円'
+        if place['price_level'] is 2:
+            price = '1200円~'
+        if place['price_level'] is 3:
+            price = '3000円~'
+        address_template = '住所: {}\nレビュー: {} {}予算: {}'
 
-    address = '住所: {}\nレビュー: {} {}予算: {}'.format(
+    else:
+        price = 0
+        address_template = '住所: {}\nレビュー: {}'
+
+    address = address_template.format(
         area, str(place['rating']),
         line_change, price
     )
@@ -491,8 +497,8 @@ def get_places_by_nearby_search(budget, transportation, location_geometry):
         'keyword': 'レストラン OR カフェ OR 定食 OR バー',
         'location': location_geometry,
         'radius': radius,
-        'maxprice': budget,
-        'minprice': str(int(budget) - 1),
+        # 'maxprice': budget,
+        # 'minprice': str(int(budget) - 1),
         'opennow': 'true',
         'rankby': 'prominence',
         'language': 'ja'
