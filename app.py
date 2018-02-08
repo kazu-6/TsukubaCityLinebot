@@ -412,8 +412,13 @@ def get_carousel_column_template(place):
         price = 0
         address_template = '住所: {}\nレビュー: {}'
 
+    if 'rating' not in place.keys():
+        rating = 'なし'
+    else:
+        rating = str(place['rating'])
+
     address = address_template.format(
-        area, str(place['rating']),
+        area, str(rating),
         line_change, price
     )
 
