@@ -58,9 +58,11 @@ GEOCODING_ENDPOINT = 'https://maps.googleapis.com/maps/api/geocode/json'
 
 # get CHANNEL_SECRET and CHANNEL_ACCESS_TOKEN from your environment variable
 
-if os.path.isfile('.env'):
+if os.path.isfile('.env') or os.path.isfile('env'):
     print('found .env. So it should be a local environment.')
     ENV = load_dotenv('.env')
+    if ENV is None:
+        ENV = load_dotenv('env')
     CHANNEL_SECRET = os.environ.get('CHANNEL_SECRET')
     CHANNEL_ACCESS_TOKEN = os.environ.get('CHANNEL_ACCESS_TOKEN')
     PLACES_APIKEY = os.environ.get('PLACES_APIKEY')
@@ -101,7 +103,7 @@ elif os.path.isfile('vcap-local.json'):
         url = 'https://' + creds['host']
         client = Cloudant(user, password, url=url, connect=True)
         db = client.create_database(db_name, throw_on_exists=False)
-        line_bot_api = LineBotApi(CHANNEL_ACCESS_TOKEN, "http://localhost:8080")#using line-simulator
+        line_bot_api = LineBotApi(CHANNEL_ACCESS_TOKEN, "http://localhost:8080") #using line-simulator
 
 AREA_COUNT = {
     '天久保': 4,
@@ -125,7 +127,7 @@ app = Flask(__name__)
 
 port = int(os.getenv('PORT', 8000))
 # 8080 on bluemix
-print(port)
+print("port is {}".format(port))
 
 
 @app.route('/')
@@ -396,16 +398,27 @@ def get_carousel_column_template(place):
     if len(area) > 17:
         line_change = ''
 
-    price = ''
-    if place['price_level'] is 1:
-        price = '~1200円'
-    if place['price_level'] is 2:
-        price = '1200円~'
-    if place['price_level'] is 3:
-        price = '3000円~'
+    address_template = ''
+    if 'price_level' in place.keys():
+        if place['price_level'] is 1:
+            price = '~1200円'
+        if place['price_level'] is 2:
+            price = '1200円~'
+        if place['price_level'] is 3:
+            price = '3000円~'
+        address_template = '住所: {}\nレビュー: {} {}予算: {}'
 
-    address = '住所: {}\nレビュー: {} {}予算: {}'.format(
-        area, str(place['rating']),
+    else:
+        price = 0
+        address_template = '住所: {}\nレビュー: {}'
+
+    if 'rating' not in place.keys():
+        rating = 'なし'
+    else:
+        rating = str(place['rating'])
+
+    address = address_template.format(
+        area, str(rating),
         line_change, price
     )
 
@@ -489,8 +502,8 @@ def get_places_by_nearby_search(budget, transportation, location_geometry):
         'keyword': 'レストラン OR カフェ OR 定食 OR バー',
         'location': location_geometry,
         'radius': radius,
-        'maxprice': budget,
-        'minprice': str(int(budget) - 1),
+        # 'maxprice': budget,
+        # 'minprice': str(int(budget) - 1),
         'opennow': 'true',
         'rankby': 'prominence',
         'language': 'ja'
