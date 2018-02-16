@@ -163,7 +163,6 @@ def shutdown():
         client.disconnect()
 
 
-
 @app.route("/line/callback", methods=['POST'])
 def callback():
     signature = request.headers['X-Line-Signature']
@@ -597,9 +596,9 @@ def post_postback_to_db(event):
 def get_richmenu():
 
     rmm = RichMenuManager(CHANNEL_ACCESS_TOKEN)
-    rmm.remove_all()
+    # rmm.remove_all()
     # Setup RichMenu to register
-    rm = RichMenu(name="Test menu", chat_bar_text="問い合わせカテゴリー")
+    rm = RichMenu(name="Test menu", chat_bar_text="問い合わせカテゴリー", selected=True)
     rm.add_area(0, 0, 1250, 843, "message", "住所変更")
     rm.add_area(1250, 0, 1250, 843, "uri", "http://www.city.tsukuba.lg.jp/index.html")
     rm.add_area(0, 843, 1250, 843, "postback", "data1=from_richmenu&data2=as_postback")
@@ -627,7 +626,7 @@ def get_richmenu():
 def get_richmenu2():
 
     rmm = RichMenuManager(CHANNEL_ACCESS_TOKEN)
-    rmm.remove_all()
+    # rmm.remove_all()
     # Setup RichMenu to register
     rm = RichMenu(name="Test menu", chat_bar_text="Open this menu", size_full=False)
     rm.add_area(0, 0, 625, 421, "message", "転出")
