@@ -22,7 +22,6 @@
 
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-
 from cloudant import Cloudant
 import os
 import sys
@@ -42,6 +41,7 @@ from linebot.models import (
     PostbackEvent, JoinEvent, TemplateSendMessage, CarouselTemplate, CarouselColumn,
     ButtonsTemplate, PostbackTemplateAction, MessageTemplateAction, URITemplateAction
 )
+from richmenu import RichMenu, RichMenuManager
 
 cf_deployment_tracker.track()
 
@@ -103,8 +103,8 @@ elif os.path.isfile('vcap-local.json'):
         url = 'https://' + creds['host']
         client = Cloudant(user, password, url=url, connect=True)
         db = client.create_database(db_name, throw_on_exists=False)
-        line_bot_api = LineBotApi(CHANNEL_ACCESS_TOKEN, "http://localhost:8080") #using line-simulator
-
+        # using line-simulator
+        line_bot_api = LineBotApi(CHANNEL_ACCESS_TOKEN, "http://localhost:8080")
 AREA_COUNT = {
     '天久保': 4,
     '桜': 3,
@@ -195,6 +195,12 @@ def callback():
                         event.reply_token,
                         get_area_buttons_template_message(text)
                     )
+
+                if text == "rm":
+                    get_richmenu()
+
+                if text == "rm2":
+                    get_richmenu2()
 
                 post_text_to_db(event)
 
@@ -398,7 +404,6 @@ def get_carousel_column_template(place):
     if len(area) > 17:
         line_change = ''
 
-    address_template = ''
     if 'price_level' in place.keys():
         if place['price_level'] is 1:
             price = '~1200円'
@@ -582,6 +587,63 @@ def post_postback_to_db(event):
 
 
 # api using function end.
+
+#####################################
+
+def get_richmenu():
+
+    rmm = RichMenuManager(CHANNEL_ACCESS_TOKEN)
+    rmm.remove_all()
+    # Setup RichMenu to register
+    rm = RichMenu(name="Test menu", chat_bar_text="Open this menu")
+    rm.add_area(0, 0, 1250, 843, "message", "rm2")
+    rm.add_area(1250, 0, 1250, 843, "uri", "http://imoutobot.com")
+    rm.add_area(0, 843, 1250, 843, "postback", "data1=from_richmenu&data2=as_postback")
+    rm.add_area(1250, 843, 1250, 843, "postback", ["data3=from_richmenu_with&data4=message_text", "ポストバックのメッセージ"])
+
+    print("printing length of image list")
+    print(len(rmm.get_list()))
+
+    # Register
+    res = rmm.register(rm, "./menu_images/54-1.png")
+    print(res)
+
+    richmenu_id = res["richMenuId"]
+    print("Registered as " + richmenu_id)
+
+    # Apply to user
+    user_id = "U0a028f903127e2178bd789b4b4046ba7"
+    rmm.apply(user_id, richmenu_id)
+
+    # Check
+    res = rmm.get_applied_menu(user_id)
+    print(user_id  + ":" + res["richMenuId"])
+
+
+def get_richmenu2():
+
+    rmm = RichMenuManager(CHANNEL_ACCESS_TOKEN)
+    rmm.remove_all()
+    # Setup RichMenu to register
+    rm = RichMenu(name="Test menu", chat_bar_text="Open this menu")
+    rm.add_area(0, 0, 1250, 843, "message", "rm")
+    rm.add_area(1250, 0, 1250, 843, "uri", "http://imoutobot.com")
+    rm.add_area(0, 843, 1250, 843, "postback", "data1=from_richmenu&data2=as_postback")
+    rm.add_area(1250, 843, 1250, 843, "postback", ["data3=from_richmenu_with&data4=message_text", "ポストバックのメッセージ"])
+
+    # Register
+    res = rmm.register(rm, "./menu_images/54-2.png")
+    richmenu_id = res["richMenuId"]
+    print("Registered as " + richmenu_id)
+
+    # Apply to user
+    user_id = "U0a028f903127e2178bd789b4b4046ba7"
+    rmm.apply(user_id, richmenu_id)
+
+    # Check
+    res = rmm.get_applied_menu(user_id)
+    print(user_id  + ":" + res["richMenuId"])
+
 
 #####################################
 

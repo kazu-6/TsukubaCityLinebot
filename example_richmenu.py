@@ -3,7 +3,7 @@ from richmenu import RichMenu, RichMenuManager
 
 # Setup RichMenuManager
 channel_access_token = "YOUR_CHANNEL_ACCESS_TOKEN"
-rmm = RichMenuManager(channel_access_token)
+rmm = RichMenuManager(CHANNEL_ACCESS_TOKEN)
 
 # Setup RichMenu to register
 rm = RichMenu(name="Test menu", chat_bar_text="Open this menu")
