@@ -629,7 +629,7 @@ def get_richmenu2():
     rmm = RichMenuManager(CHANNEL_ACCESS_TOKEN)
     rmm.remove_all()
     # Setup RichMenu to register
-    rm = RichMenu(name="Test menu", chat_bar_text="Open this menu")
+    rm = RichMenu(name="Test menu", chat_bar_text="Open this menu", size_full=False)
     rm.add_area(0, 0, 625, 421, "message", "転出")
     rm.add_area(625, 0, 625, 421, "message", "転入（国内）")
     rm.add_area(1875, 422, 625, 421, "message", "戻る")
