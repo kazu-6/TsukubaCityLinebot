@@ -1,22 +1,23 @@
+# 大カテゴリー、住所変更
+# 転出、転入（国内）、転入（海外）、転居
+
 # 案内マニュアル」フォルダ内にある、、、
 # todo「5-2. 住所変更ＦＡＱ」
 # todo 「P49 A 転出（国内・海外）」～「P56 D 転居」
-# todo 「通知カードの紛失に関連する手続」及び「通知カードの表面記載事項変更手続」
 
+# 以下は↑にともなって発生しうるマイナンバー関係手続き
+# todo 「通知カードの紛失に関連する手続」及び「通知カードの表面記載事項変更手続」
+#↓3つ目の参照先
 #  ●もう怖くない！マイナ係窓口業務チェックポイント
-#
 # 　　　シート名 「通知カード再交付申請受付」P２
 # 　　　　　　　 「個人番号変更受付」P３
 #
-#
 # 　●マイナンバー取扱事務早見表
-#
 # 　　　シート名 「H28.7.1～」
 # 　　　　事務欄　個人番号・・・・指定請求申請
 # 　　　　　　　　通知カード・・・再交付申請，紛失届，表面記載事項変更届（外国人含）
 #
 #  ●(通カ・個カ・電子)マイナンバー事務早見表
-#
 # 　　　シート名 「通知カード」通知カードに関する事務早見表
 # 　　　　項番号 「１－１」～「２－３」，「６－１」～「６－３」
 
@@ -196,11 +197,14 @@ def callback():
                         get_area_buttons_template_message(text)
                     )
 
-                if text == "rm":
+                if text == "staff":
                     get_richmenu()
 
-                if text == "rm2":
+                if text == "住所変更":
                     get_richmenu2()
+
+                if text == "戻る":
+                    get_richmenu()
 
                 post_text_to_db(event)
 
@@ -595,9 +599,9 @@ def get_richmenu():
     rmm = RichMenuManager(CHANNEL_ACCESS_TOKEN)
     rmm.remove_all()
     # Setup RichMenu to register
-    rm = RichMenu(name="Test menu", chat_bar_text="Open this menu")
-    rm.add_area(0, 0, 1250, 843, "message", "rm2")
-    rm.add_area(1250, 0, 1250, 843, "uri", "http://imoutobot.com")
+    rm = RichMenu(name="Test menu", chat_bar_text="問い合わせカテゴリー")
+    rm.add_area(0, 0, 1250, 843, "message", "住所変更")
+    rm.add_area(1250, 0, 1250, 843, "uri", "http://www.city.tsukuba.lg.jp/index.html")
     rm.add_area(0, 843, 1250, 843, "postback", "data1=from_richmenu&data2=as_postback")
     rm.add_area(1250, 843, 1250, 843, "postback", ["data3=from_richmenu_with&data4=message_text", "ポストバックのメッセージ"])
 
@@ -605,7 +609,7 @@ def get_richmenu():
     print(len(rmm.get_list()))
 
     # Register
-    res = rmm.register(rm, "./menu_images/54-1.png")
+    res = rmm.register(rm, "./menu_images/4x4.png")
     print(res)
 
     richmenu_id = res["richMenuId"]
@@ -626,13 +630,12 @@ def get_richmenu2():
     rmm.remove_all()
     # Setup RichMenu to register
     rm = RichMenu(name="Test menu", chat_bar_text="Open this menu")
-    rm.add_area(0, 0, 1250, 843, "message", "rm")
-    rm.add_area(1250, 0, 1250, 843, "uri", "http://imoutobot.com")
-    rm.add_area(0, 843, 1250, 843, "postback", "data1=from_richmenu&data2=as_postback")
-    rm.add_area(1250, 843, 1250, 843, "postback", ["data3=from_richmenu_with&data4=message_text", "ポストバックのメッセージ"])
+    rm.add_area(0, 0, 625, 421, "message", "転出")
+    rm.add_area(625, 0, 625, 421, "message", "転入（国内）")
+    rm.add_area(1875, 422, 625, 421, "message", "戻る")
 
     # Register
-    res = rmm.register(rm, "./menu_images/54-2.png")
+    res = rmm.register(rm, "./menu_images/4x2.png")
     richmenu_id = res["richMenuId"]
     print("Registered as " + richmenu_id)
 
