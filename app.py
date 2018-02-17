@@ -205,6 +205,11 @@ def callback():
                 if text == "戻る":
                     get_richmenu()
 
+                if text == "delete richmenu":
+                    rmm = RichMenuManager(CHANNEL_ACCESS_TOKEN)
+                    rmm.remove_all()
+
+
                 post_text_to_db(event)
 
             # if isinstance(event.message, LocationMessage):
@@ -596,23 +601,25 @@ def post_postback_to_db(event):
 def get_richmenu():
 
     rmm = RichMenuManager(CHANNEL_ACCESS_TOKEN)
-    # rmm.remove_all()
-    # Setup RichMenu to register
-    rm = RichMenu(name="Test menu", chat_bar_text="問い合わせカテゴリー", selected=True)
-    rm.add_area(0, 0, 1250, 843, "message", "住所変更")
-    rm.add_area(1250, 0, 1250, 843, "uri", "http://www.city.tsukuba.lg.jp/index.html")
-    rm.add_area(0, 843, 1250, 843, "postback", "data1=from_richmenu&data2=as_postback")
-    rm.add_area(1250, 843, 1250, 843, "postback", ["data3=from_richmenu_with&data4=message_text", "ポストバックのメッセージ"])
 
-    print("printing length of image list")
-    print(len(rmm.get_list()))
+    rm_name_and_id = get_rm_name_and_id(rmm)
+    menu_name_to_get = "Menu1"
 
-    # Register
-    res = rmm.register(rm, "./menu_images/4x4.png")
-    print(res)
+    if menu_name_to_get in rm_name_and_id.keys():
+        richmenu_id = rm_name_and_id[menu_name_to_get]
+        print("found {}".format(menu_name_to_get))
 
-    richmenu_id = res["richMenuId"]
-    print("Registered as " + richmenu_id)
+    else:
+        rm = RichMenu(name="Menu1", chat_bar_text="問い合わせカテゴリー", selected=True)
+        rm.add_area(0, 0, 1250, 843, "message", "住所変更")
+        rm.add_area(1250, 0, 1250, 843, "uri", "http://www.city.tsukuba.lg.jp/index.html")
+        rm.add_area(0, 843, 1250, 843, "postback", "data1=from_richmenu&data2=as_postback")
+        rm.add_area(1250, 843, 1250, 843, "postback", ["data3=from_richmenu_with&data4=message_text", "ポストバックのメッセージ"])
+
+        # Register
+        res = rmm.register(rm, "./menu_images/4x2.png")
+        richmenu_id = res["richMenuId"]
+        print("Registered as " + richmenu_id)
 
     # Apply to user
     user_id = "U0a028f903127e2178bd789b4b4046ba7"
@@ -626,26 +633,42 @@ def get_richmenu():
 def get_richmenu2():
 
     rmm = RichMenuManager(CHANNEL_ACCESS_TOKEN)
-    # rmm.remove_all()
-    # Setup RichMenu to register
-    rm = RichMenu(name="Test menu", chat_bar_text="Open this menu", size_full=False)
-    rm.add_area(0, 0, 625, 421, "message", "転出")
-    rm.add_area(625, 0, 625, 421, "message", "転入（国内）")
-    rm.add_area(1875, 422, 625, 421, "message", "戻る")
 
-    # Register
-    res = rmm.register(rm, "./menu_images/4x2.png")
-    richmenu_id = res["richMenuId"]
-    print("Registered as " + richmenu_id)
+    rm_name_and_id = get_rm_name_and_id(rmm)
+    menu_name_to_get = "Menu2"
+
+    if menu_name_to_get in rm_name_and_id.keys():
+        richmenu_id = rm_name_and_id[menu_name_to_get]
+        print("found {}".format(menu_name_to_get))
+
+    else:
+        rm = RichMenu(name=menu_name_to_get, chat_bar_text="住所変更", size_full=False)
+        rm.add_area(0, 0, 625, 421, "message", "転出")
+        rm.add_area(625, 0, 625, 421, "message", "転入（国内）")
+        rm.add_area(1875, 422, 625, 421, "message", "戻る")
+        rm.add_area(1250, 422, 625, 421, "message", "delete richmenu")
+
+        # Register
+        res = rmm.register(rm, "./menu_images/4x2.png")
+        richmenu_id = res["richMenuId"]
+        print("Registered as " + richmenu_id)
 
     # Apply to user
     user_id = "U0a028f903127e2178bd789b4b4046ba7"
     rmm.apply(user_id, richmenu_id)
 
-    # Check
-    res = rmm.get_applied_menu(user_id)
-    print(user_id  + ":" + res["richMenuId"])
 
+def get_rm_name_and_id(rmm):
+
+    rm_list = rmm.get_list()['richmenus']
+    rm_name_and_id = {}
+    rm_name_list = [rm['name'] for rm in rm_list]
+    rm_richMenuId_list = [rm['richMenuId'] for rm in rm_list]
+
+    for name, richMenuId in zip(rm_name_list, rm_richMenuId_list):
+        rm_name_and_id[name] = richMenuId
+
+    return rm_name_and_id
 
 #####################################
 
