@@ -55,7 +55,7 @@ webhook url を設定して、
 
 ## Bluemix へのPush
 
-あるいは最初からGithubからのCIを設定した方がいい。
+あるいは最初からGithubからのCIを設定した方がいい。その場合、Gitを含んだToolchainを作り、Git部分をGithubに変える。
 
 1. [cloudfoundry cli](https://github.com/cloudfoundry/cli#downloads "cloudfoundry/cli: The official command line client for Cloud Foundry")をインストール
 1. bluemix アカウントを作成
@@ -64,6 +64,7 @@ webhook url を設定して、
 - Cloudfoundry CLI にバグがあるかもわからない。
     - 筆者環境ではインタラクティブにログインできなかった。その場合は以下参照。
     - http://cli.cloudfoundry.org/ja-JP/cf/login.html
+
 
 ## その他必要なこと。
 

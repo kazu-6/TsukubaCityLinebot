@@ -38,7 +38,7 @@ from flask import Flask, request, abort, render_template, jsonify
 from linebot import (LineBotApi, WebhookParser)
 from linebot.exceptions import (InvalidSignatureError)
 from linebot.models import (
-    MessageEvent, TextMessage, TextSendMessage, LocationMessage, ConfirmTemplate,
+    MessageEvent, TextMessage, TextSendMessage, ImageSendMessage, LocationMessage, ConfirmTemplate,
     PostbackEvent, JoinEvent, TemplateSendMessage, CarouselTemplate, CarouselColumn,
     ButtonsTemplate, PostbackTemplateAction, MessageTemplateAction, URITemplateAction
 )
@@ -200,6 +200,13 @@ def callback():
                     get_richmenu()
 
                 if text == "住所変更":
+                    line_bot_api.reply_message(
+                        event.reply_token,
+                        [
+                            TextSendMessage(text="住所変更のFAQを表示します。"),
+                            ImageSendMessage(original_content_url="./reply_images/tenshutu.png", preview_image_url="./reply_images/tenshutu.png")
+                        ]
+                    )
                     get_richmenu2()
 
                 if text == "戻る":
