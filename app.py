@@ -204,7 +204,7 @@ def callback():
                         event.reply_token,
                         [
                             TextSendMessage(text="住所変更のFAQを表示します。"),
-                            ImageSendMessage(original_content_url="https://i.imgur.com/8uLNKdb.png", preview_image_url="https://i.imgur.com/8uLNKdbt.png")
+                            ImageSendMessage(original_content_url="https://i.imgur.com/8uLNKdb.png", preview_image_url="https://i.imgur.com/8uLNKdbb.png")
                         ]
                     )
                     get_richmenu2()
