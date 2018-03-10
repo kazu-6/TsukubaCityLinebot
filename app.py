@@ -1,4 +1,4 @@
-# test slack push
+# test slack pushing
 # 大カテゴリー、住所変更
 # 転出、転入（国内）、転入（海外）、転居
 
