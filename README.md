@@ -30,20 +30,58 @@ Anaconda python3
 あと適宜足りなかったら pip でインストール
 
 
-### 各種APIの取得
-.env.sampleを.envにリネームし、各種APIを取得
+### 環境変数の設定
 
-- https://developers.line.me/console/
-- https://developers.google.com/places/web-service/?hl=ja
-- https://developers.google.com/maps/documentation/geocoding/get-api-key?hl=ja
-- ibm cloud -> select your App -> Connections -> Cloudant -> View Credentials
+#### IBM Cloudのアカウントを作成ログイン
+
+[login url](https://idaas.iam.ibm.com/idaas/mtfim/sps/authsvc?PolicyId=urn:ibm:security:authentication:asf:basicldapuser)
+create resource -> cloud foundry app -> python
+
+#### .envの作成
+.env.sampleを.envにリネームし編集する。その際、各種APIを以下から取得
+
+- API各種
+    - https://developers.line.me/console/
+    - https://developers.google.com/places/web-service/?hl=ja
+    - https://developers.google.com/maps/documentation/geocoding/get-api-key?hl=ja
+- IBM Cloudの環境変数はここから変更
+    - ibm cloud -> select your App -> Connections -> Cloudant -> View Credentials
+- Cloudant NoSQL DBに作ったdbの名前にする
+    - DB_NAMEに設定する
+
+#### ibm cloudに環境変数の設定をする
+
+[cloudfoundry/cli download](https://github.com/cloudfoundry/cli/releases)
+
+`generate_shell_script_for_set-env.py`内のIBM Cloudのユーザー情報を変更する。
+
+```bash
+python generate_shell_script_for_set-env.py
+sh set-env.sh
+```
+を実行すると、先程編集した.envを元に環境変数が設定できる。
 
 ### vcap-local.jsonの準備
+- ibm_cloud(dashboard) -> Cloudant NoSQL DB -> show credentials　をみて適宜コピペ
 
+
+```json
+{
+ "services": {
+   "cloudantNoSQLDB": [
+     {
+       "credentials": {
+         ここに適宜追記
+       },
+       "label": "cloudantNoSQLDB"
+     }
+   ]
+ }
+}
+```
 
 ## 実行方法
 
-- db_name変数を適宜変える。Cloudant NoSQL DBに作ったdbの名前にする
 
 ngrokを使う場合,
 ngrok.exeを起動して、`ngrok.exe http 8000`
@@ -53,7 +91,7 @@ webhook url を設定して、
 `python app.py`
 
 
-## Bluemix へのPush
+## IBM Cloud へのPush
 
 あるいは最初からGithubからのCIを設定した方がいい。その場合、Gitを含んだToolchainを作り、Git部分をGithubに変える。
 
@@ -69,6 +107,10 @@ webhook url を設定して、
 ## その他必要なこと。
 
 - LINE Messaging APIを使うための諸準備。ググるべし。
+    - 新規Botの場合、
+        - Webhook使用
+        - グループトーク機能On
+        - 自動挨拶Offを忘れずに
 - Google Place API, Google Map Geocoding APIを使うための準備。
     - Google Developer Consoleからプロジェクト作ったり、API有効化したり。
 
@@ -81,5 +123,5 @@ webhook url を設定して、
         - 少しでいい。
 - API, JSONの概念と、それを利用するスキル
 - Git, Github, Continuous Integration の概念
-- Bluemix, PaaSの概念。マニュアル読みながら使う。
+- Bluemix(IBM Cloud), PaaSの概念。マニュアル読みながら使う。
 - NoSQLの概念

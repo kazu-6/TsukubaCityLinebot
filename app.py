@@ -68,6 +68,8 @@ if os.path.isfile('.env') or os.path.isfile('env'):
     CHANNEL_ACCESS_TOKEN = os.environ.get('CHANNEL_ACCESS_TOKEN')
     PLACES_APIKEY = os.environ.get('PLACES_APIKEY')
     GEOCODING_APIKEY = os.environ.get('GEOCODING_APIKEY')
+    DB_NAME = os.environ.get('DB_NAME')
+
 
 # envの記述方法を書いておくべきかな
 else:
@@ -76,9 +78,8 @@ else:
     CHANNEL_ACCESS_TOKEN = os.getenv('CHANNEL_ACCESS_TOKEN')
     PLACES_APIKEY = os.getenv('PLACES_APIKEY')
     GEOCODING_APIKEY = os.getenv('GEOCODING_APIKEY')
-    print(CHANNEL_SECRET)
+    DB_NAME = os.getenv('DB_NAME')
 
-db_name = 'tsukuba_city_line_bot'  # change to the database name you are using
 client = None
 db = None
 
@@ -91,7 +92,7 @@ if 'VCAP_SERVICES' in os.environ:
         password = creds['password']
         url = 'https://' + creds['host']
         client = Cloudant(user, password, url=url, connect=True)
-        db = client.create_database(db_name, throw_on_exists=False)
+        db = client.create_database(DB_NAME, throw_on_exists=False)
         line_bot_api = LineBotApi(CHANNEL_ACCESS_TOKEN)
 
 elif os.path.isfile('vcap-local.json'):
@@ -103,7 +104,7 @@ elif os.path.isfile('vcap-local.json'):
         password = creds['password']
         url = 'https://' + creds['host']
         client = Cloudant(user, password, url=url, connect=True)
-        db = client.create_database(db_name, throw_on_exists=False)
+        db = client.create_database(DB_NAME, throw_on_exists=False)
         # using line-simulator
         line_bot_api = LineBotApi(CHANNEL_ACCESS_TOKEN, "http://localhost:8080")
 AREA_COUNT = {
@@ -126,7 +127,7 @@ parser = WebhookParser(CHANNEL_SECRET)
 
 app = Flask(__name__)
 
-port = int(os.getenv('PORT', 8000))
+port = 8000
 # 8080 on bluemix
 print("port is {}".format(port))
 
