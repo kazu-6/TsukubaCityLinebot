@@ -127,7 +127,7 @@ parser = WebhookParser(CHANNEL_SECRET)
 
 app = Flask(__name__)
 
-port = 8000
+port = int(os.getenv('PORT', 8000))
 # 8080 on bluemix
 print("port is {}".format(port))
 

@@ -1,6 +1,6 @@
 shfile = open('set-env.sh', 'w')
 # change username and password
-login_command = "cf login -a https://api.ng.bluemix.net -u ramuniku@gmail.com -s SouthUS\n"
+login_command = "cf login -a https://api.ng.bluemix.net"
 
 shfile.write(login_command)
 
