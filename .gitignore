@@ -1,6 +1,9 @@
 manifest.yml
 vcap-local.json
 ngrok.exe
+set-env.sh
+env
+
 
 # Created by .ignore support plugin (hsz.mobi)
 ### Python template
